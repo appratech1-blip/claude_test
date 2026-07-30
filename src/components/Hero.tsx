@@ -1,33 +1,29 @@
-import { motion, type Variants } from 'motion/react'
+import { lazy, Suspense } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
+import { fadeUp, goldGlowHover, staggerContainer } from '../lib/motion'
 import './Hero.css'
 
-const container: Variants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15, delayChildren: 0.1 },
-  },
-}
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 28 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-  },
-}
+const HeroParticles = lazy(() => import('./HeroParticles'))
 
 function Hero() {
+  const prefersReducedMotion = useReducedMotion()
+  const container = staggerContainer()
+
   return (
     <section className="hero">
       <div className="hero-glow" aria-hidden="true" />
+      {!prefersReducedMotion && (
+        <Suspense fallback={null}>
+          <HeroParticles />
+        </Suspense>
+      )}
 
       <motion.div
         className="hero-content"
         variants={container}
-        initial="hidden"
-        animate="show"
+        initial={prefersReducedMotion ? 'show' : 'hidden'}
+        whileInView="show"
+        viewport={{ once: true, amount: 0.4 }}
       >
         <motion.span className="hero-eyebrow" variants={fadeUp}>
           Est. Occasions &middot; Curated Events
@@ -40,23 +36,30 @@ function Hero() {
         </motion.h1>
 
         <motion.p className="hero-subtitle" variants={fadeUp}>
-          From intimate galas to landmark celebrations, we design and manage
-          premium experiences that leave a lasting impression.
+          From intimate galas to landmark celebrations, KTG Events designs and
+          manages premium experiences that leave a lasting impression.
         </motion.p>
 
         <motion.div className="hero-actions" variants={fadeUp}>
           <motion.a
-            href="#contact"
+            href="#quote"
             className="hero-cta"
-            whileHover={{ scale: 1.045, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            whileHover={prefersReducedMotion ? undefined : goldGlowHover}
+            whileFocus={prefersReducedMotion ? undefined : goldGlowHover}
+            whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            Plan Your Event
+            Request a Quote
           </motion.a>
-          <a href="#portfolio" className="hero-secondary">
+          <motion.a
+            href="#portfolio"
+            className="hero-secondary"
+            whileHover={prefersReducedMotion ? undefined : { color: '#D4AF37' }}
+            whileFocus={prefersReducedMotion ? undefined : { color: '#D4AF37' }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
             View Portfolio
-          </a>
+          </motion.a>
         </motion.div>
       </motion.div>
     </section>
