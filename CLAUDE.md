@@ -17,4 +17,4 @@ This is a minimal Vite + React 19 + TypeScript single-page app, currently just t
 
 - **TypeScript project references**: `tsconfig.json` has no files of its own and instead references `tsconfig.app.json` (app source, bundler module resolution) and `tsconfig.node.json` (Vite config itself). `npm run build` type-checks both via `tsc -b` before Vite bundles.
 - **Linting**: uses Oxlint (`.oxlintrc.json`), not ESLint. Type-aware rules are not enabled by default — see README.md for how to opt in via `oxlint-tsgolint`.
-- **Animation libraries**: both `framer-motion` and `motion` are installed as dependencies. `motion` is the successor package and a superset of `framer-motion`'s functionality — prefer importing from `motion` for new code rather than adding further `framer-motion` imports.
+- **Animation**: use the `motion` package (successor to `framer-motion`, which is not installed). Import components as `import { motion } from "motion/react"`.
