@@ -1,24 +1,54 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import { fadeUp, goldGlowHover, staggerContainer } from '../lib/motion'
 import './Hero.css'
 
 const HeroParticles = lazy(() => import('./HeroParticles'))
+const Hero3D = lazy(() => import('./Hero3D'))
 
 const REGIONS = ['TN', 'Kerala', 'Karnataka', 'Puducherry', 'Dubai']
 
+function ParticlesFallback() {
+  return (
+    <Suspense fallback={null}>
+      <HeroParticles />
+    </Suspense>
+  )
+}
+
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 769px)')
+    const update = () => setIsDesktop(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
+
+  return isDesktop
+}
+
 function Hero() {
   const prefersReducedMotion = useReducedMotion()
+  const isDesktop = useIsDesktop()
   const container = staggerContainer()
+  const show3D = isDesktop && !prefersReducedMotion
 
   return (
     <section className="hero">
       <div className="hero-glow" aria-hidden="true" />
-      {!prefersReducedMotion && (
-        <Suspense fallback={null}>
-          <HeroParticles />
-        </Suspense>
-      )}
+      {!prefersReducedMotion &&
+        (show3D ? (
+          <div className="hero-3d">
+            <Suspense fallback={<ParticlesFallback />}>
+              <Hero3D />
+            </Suspense>
+          </div>
+        ) : (
+          <ParticlesFallback />
+        ))}
 
       <motion.div
         className="hero-content"
