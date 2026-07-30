@@ -5,6 +5,8 @@ import './Hero.css'
 
 const HeroParticles = lazy(() => import('./HeroParticles'))
 
+const REGIONS = ['TN', 'Kerala', 'Karnataka', 'Puducherry', 'Dubai']
+
 function Hero() {
   const prefersReducedMotion = useReducedMotion()
   const container = staggerContainer()
@@ -26,19 +28,28 @@ function Hero() {
         viewport={{ once: true, amount: 0.4 }}
       >
         <motion.span className="hero-eyebrow" variants={fadeUp}>
-          Est. Occasions &middot; Curated Events
+          Event Management &amp; Rentals
         </motion.span>
 
         <motion.h1 className="hero-title" variants={fadeUp}>
-          Unforgettable events,
+          Creating Extraordinary Events,
           <br />
-          <span className="hero-title-accent">flawlessly crafted.</span>
+          <span className="hero-title-accent">Lasting Memories.</span>
         </motion.h1>
 
         <motion.p className="hero-subtitle" variants={fadeUp}>
-          From intimate galas to landmark celebrations, KTG Events designs and
-          manages premium experiences that leave a lasting impression.
+          End-to-end event management and premium rentals — weddings,
+          corporate events, conferences, and large-scale productions delivered
+          flawlessly across South India and Dubai.
         </motion.p>
+
+        <motion.div className="hero-regions" variants={fadeUp}>
+          {REGIONS.map((region) => (
+            <span key={region} className="hero-region-badge">
+              {region}
+            </span>
+          ))}
+        </motion.div>
 
         <motion.div className="hero-actions" variants={fadeUp}>
           <motion.a
